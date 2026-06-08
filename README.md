@@ -69,7 +69,7 @@ Basic Usage Syntax:
 
 Help options:
 ```bash
-./launcher_kmer_multiplicity_tool -i ./dataset -k 6
+./launcher_kmer_multiplicity_tool -h
 ```
 
 Standard Run: Run using your_dataset_folder of fasta files inside your local ./datasets directory (datasets/your_dataset_folder), targeting a k-mer size of 6, utilizing the default 2 CPU processes. 
