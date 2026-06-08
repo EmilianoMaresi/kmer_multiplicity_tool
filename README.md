@@ -8,7 +8,7 @@ $$\text{Genome Length} - k + 1$$
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before running this tool, ensure your system has the following dependencies installed:
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) (and make sure the Docker daemon is actively running)
