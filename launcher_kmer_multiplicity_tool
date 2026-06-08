@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Hardcode the image name since this launcher is dedicated to this single tool
+IMAGE_NAME="kmer_multiplicity_tool"
+
+# 1. Intercept help flags and pass them straight to Python inside Docker
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]] || [ "$#" -eq 0 ]; then
+    echo "Fetching help menu directly from the Python tool container..."
+    echo "------------------------------------------------------------------"
+    docker run --rm "$IMAGE_NAME" --help
+    exit 0
+fi
+
+# Initialize variables to trap paths for volume mounting
+DATASET_PATH=""
+RESULT_PATH=""
+
+# 2. Parse arguments to locate paths for Docker volume mounting
+TEMP_ARGS=("$@")
+for ((i=0; i<${#TEMP_ARGS[@]}; i++)); do
+    case ${TEMP_ARGS[i]} in
+        -i|--dataset_path)
+            DATASET_PATH="${TEMP_ARGS[i+1]}"
+            ;;
+        -o|--result_folder_path)
+            RESULT_PATH="${TEMP_ARGS[i+1]}"
+            ;;
+    esac
+done
+
+# Validate that the mandatory input dataset path was supplied
+if [ -z "$DATASET_PATH" ]; then
+    echo "Error: Missing mandatory argument -i / --dataset_path"
+    echo "Run './launcher --help' to see available options."
+    exit 1
+fi
+
+# Convert input path to an absolute path
+ABS_DATASET_PATH=$(cd "$(dirname "$DATASET_PATH")" && pwd)/$(basename "$DATASET_PATH")
+
+# FIX: Get the absolute path of the PARENT directory (e.g., the absolute path to 'dataset')
+# and the actual name of that parent directory.
+PARENT_DATASET_PATH=$(cd "$(dirname "$DATASET_PATH")" && pwd)
+PARENT_DIR_NAME=$(basename "$PARENT_DATASET_PATH")
+DATASET_DIR_NAME=$(basename "$ABS_DATASET_PATH")
+
+# 3. Streamlined output path routing
+if [ -z "$RESULT_PATH" ]; then
+    ABS_RESULT_PATH=$(mkdir -p "./results" && cd "./results" && pwd)
+else
+    ABS_RESULT_PATH=$(mkdir -p "$RESULT_PATH" && cd "$RESULT_PATH" && pwd)
+fi
+
+echo "Launching Docker Container..."
+# FIX: Mount the parent folder to /app/data so the container recreates the "dataset/RapportoLunghezze" hierarchy
+echo "Mounting input:  $PARENT_DATASET_PATH -> /app/data/$PARENT_DIR_NAME"
+echo "Mounting output: $ABS_RESULT_PATH -> /app/results"
+echo "--------------------------------------------------"
+
+  
+# Run the Docker container as the current host user
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  -v "$PARENT_DATASET_PATH:/app/data/$PARENT_DIR_NAME" \
+  -v "$ABS_RESULT_PATH:/app/results" \
+  "$IMAGE_NAME" \
+  "$@" \
+  --dataset_path "/app/data/$PARENT_DIR_NAME/$DATASET_DIR_NAME"  
+  
+  
+  
+  
+  
+  
+  
