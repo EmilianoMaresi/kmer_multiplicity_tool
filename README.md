@@ -58,26 +58,32 @@ To verify that the image compiled successfully and is sitting securely in your l
 docker images
 ```
 
-## Running the Tool
-Execution is completely automated through the custom ./launcher script, which seamlessly handles directory mapping so your local files safely interact with the isolated container.
-
-Basic Usage Syntax:
-```bash
-./launcher_kmer_multiplicity_tool -i <dataset_path> -k <kmer_size> [options]
-```
-
-## Execution Examples:
-
-Help options:
+## Help option
 ```bash
 ./launcher_kmer_multiplicity_tool -h
 ```
 
-Standard Run: Run using your_dataset_folder of fasta files inside your local ./datasets directory (datasets/your_dataset_folder), targeting a k-mer size of 6, utilizing the default 2 CPU processes. 
+## Running the Tool
+Execution is completely automated through the custom ./launcher_kmer_multiplicity_tool script
+
+Basic Usage Syntax:
+```bash
+./launcher_kmer_multiplicity_tool -i <dataset_path> -k <kmer_size> -p <cpus>
+```
+
+## Execution Examples:
+
+Run using your_dataset_folder of fasta files inside your local ./datasets directory (datasets/your_dataset_folder), targeting a k-mer size of 6, utilizing the default 2 CPU processes. 
 Results will automatically generate inside a folder named ./results/your_dataset_folder/:
 
 ```bash
-./launcher_kmer_multiplicity_tool -i ./dataset -k 6
+./launcher_kmer_multiplicity_tool -i ./datasets/your_dataset_folder -k 6
+```
+
+To use more than 2 CPUs use the option -p (example with 5 CPUs)
+
+```bash
+./launcher_kmer_multiplicity_tool -i ./datasets/your_dataset_folder -k 6 -p 5
 ```
 
 ## Uninstallation & System Cleanup
