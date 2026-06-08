@@ -38,13 +38,20 @@ To pull the necessary dependencies, set up the container environment, and compil
 
 * Open your terminal in the project directory.
 
-* Grant execution permissions to the install script:
-
+* Grant execution permissions to scripts:
 
 ```bash
 chmod +x install.sh
+chmod +x launcher_kmer_multiplicity_tool
+chmod +x uninstall.sh
+chmod +x dolier/dolier-kfreqs
+```
+
+Install docker image with:
+```bash
 ./install.sh
 ```
+
 To verify that the image compiled successfully and is sitting securely in your local Docker registry, run:
 
 ```bash
@@ -53,12 +60,6 @@ docker images
 
 ## Running the Tool
 Execution is completely automated through the custom ./launcher script, which seamlessly handles directory mapping so your local files safely interact with the isolated container.
-
-Give the launcher script execution permissions:
-
-```bash
-chmod +x launcher_kmer_multiplicity_tool
-```
 
 Basic Usage Syntax:
 ```bash
@@ -83,7 +84,6 @@ Results will automatically generate inside a folder named ./results/your_dataset
 If you need to free up hard drive storage or remove the container entirely from your environment, use the uninstaller script. This script cleanly terminates any stuck container instances, drops the kmer_multiplicity_tool image, and purges dangling layers or build caches:
 
 ```bash
-chmod +x uninstall.sh
 ./uninstall.sh
 ```
 
